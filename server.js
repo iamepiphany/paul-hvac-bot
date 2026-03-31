@@ -14,12 +14,15 @@ const PORT = process.env.PORT || 3001;
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// Email transporter — each business owner sets their own credentials in .env
+// Email transporter — Gmail OAuth2
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
+    type: 'OAuth2',
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    clientId: process.env.GMAIL_CLIENT_ID,
+    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
   },
 });
 
@@ -70,7 +73,7 @@ app.post('/api/chat', async (req, res) => {
         const appointment = JSON.parse(bookMatch[1].trim());
 
         // Send email if credentials are set
-        if (process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.APPOINTMENT_EMAIL) {
+        if (process.env.EMAIL_USER && process.env.GMAIL_REFRESH_TOKEN && process.env.APPOINTMENT_EMAIL) {
           await transporter.sendMail({
             from: `"${businessName || 'Chatbot'}" <${process.env.EMAIL_USER}>`,
             to: process.env.APPOINTMENT_EMAIL,
