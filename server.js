@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import Groq from 'groq-sdk';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -13,18 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-// Email transporter — Gmail OAuth2
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: process.env.EMAIL_USER,
-    clientId: process.env.GMAIL_CLIENT_ID,
-    clientSecret: process.env.GMAIL_CLIENT_SECRET,
-    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.use(cors());
 app.use(express.json());
@@ -72,10 +61,9 @@ app.post('/api/chat', async (req, res) => {
       try {
         const appointment = JSON.parse(bookMatch[1].trim());
 
-        // Send email if credentials are set
-        if (process.env.EMAIL_USER && process.env.GMAIL_REFRESH_TOKEN && process.env.APPOINTMENT_EMAIL) {
-          await transporter.sendMail({
-            from: `"${businessName || 'Chatbot'}" <${process.env.EMAIL_USER}>`,
+        if (process.env.RESEND_API_KEY && process.env.APPOINTMENT_EMAIL) {
+          await resend.emails.send({
+            from: 'onboarding@resend.dev',
             to: process.env.APPOINTMENT_EMAIL,
             subject: `New Appointment Request — ${appointment.name || 'Customer'}`,
             html: `
@@ -91,13 +79,12 @@ app.post('/api/chat', async (req, res) => {
           });
           console.log(`Appointment email sent for ${appointment.name}`);
         } else {
-          console.warn('Appointment detected but email credentials not set in .env');
+          console.warn('Appointment detected but RESEND_API_KEY or APPOINTMENT_EMAIL not set');
         }
       } catch (e) {
-        console.error('Failed to parse or send appointment:', e.message);
+        console.error('Failed to send appointment email:', e.message);
       }
 
-      // Strip the [BOOK]...[/BOOK] block from the reply the user sees
       reply = reply.replace(/\[BOOK\][\s\S]*?\[\/BOOK\]/g, '').trim();
     }
 
