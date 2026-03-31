@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatbot Widget — Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f4f4f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .card {
+      background: white; border-radius: 16px; padding: 40px;
+      max-width: 540px; width: 90%; box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: #111; }
+    p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+    code {
+      display: block; background: #0f1117; color: #86efac;
+      padding: 16px 18px; border-radius: 10px; font-size: 12px;
+      line-height: 1.7; overflow-x: auto; white-space: pre;
+    }
+    .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; margin-bottom: 8px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Chatbot Widget — Live Demo</h1>
+    <p>The chat bubble is in the bottom-right corner. Click it to start a conversation.</p>
+    <span class="label">Embed code for any website</span>
+    <code>&lt;script
+  src="http://localhost:3002/widget.js"
+  data-server="http://localhost:3002"
+  data-name="[insert chatbot name]"
+  data-color="#3c6a00"
+  data-greeting="Hey! Need a lawn care quote? I can help."
+  data-prompt="You are a helpful assistant for [insert chatbot name]. Be friendly and keep answers short."
+  data-placeholder="Type a message..."
+&gt;&lt;/script&gt;</code>
+  </div>
+
+  <!-- Widget embed — edit these to test different configs -->
+  <script
+    src="http://localhost:3002/widget.js?v=3"
+    data-server="http://localhost:3002"
+    data-name="Paul Bot"
+    data-color="#1B4FD8"
+    data-greeting="Hey! Welcome to Paul's HVAC! How can I assist you?"
+    data-prompt="You are Paul Bot, the friendly assistant for Paul's HVAC — a heating and cooling contractor serving Northumberland County, Pennsylvania. Paul's HVAC offers repair services, same-day appointments, and full system replacements. Located at 2491 PA-61, Sunbury, PA 17801. Phone: (570) 898-1029. Hours: Opens at 10:30 AM. Paul's HVAC has a 4.6-star Google rating. Be concise, caring, direct, and helpful. Include calls to action whenever possible — encourage customers to call, schedule a visit, or book an appointment. When a customer asks a question about their HVAC system, always follow up by asking if they'd like to schedule an appointment or same-day service. Never discuss topics unrelated to HVAC services, Paul's personal life, competitors, or anything outside the scope of heating and cooling — politely redirect. When a user wants to book an appointment, collect their full name, service needed, preferred date and time, and phone number or email — one question at a time. Once you have all four, output this block on its own line before your confirmation message: [BOOK]{&quot;name&quot;:&quot;...&quot;,&quot;service&quot;:&quot;...&quot;,&quot;datetime&quot;:&quot;...&quot;,&quot;contact&quot;:&quot;...&quot;}[/BOOK] Then confirm with a friendly message. Never show the [BOOK] block to the user. Keep responses to 2-3 sentences unless the user needs more detail."
+    data-placeholder="Type a message...">
+  </script>
+</body>
+</html>
